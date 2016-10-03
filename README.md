@@ -14,6 +14,10 @@ It is a toolkit for publishing sensor data from iOS into ROS topics. It is set o
 
 The iOS app publishes sensor data to RabbitMQ topic in JSON format. Then client app reads them and publishes them directly to ROS topic.
 
+## Request a feature
+
+[![Feature Requests](http://feathub.com/tomas789/iOSmsg?format=svg)](http://feathub.com/tomas789/iOSmsg)
+
 ## How to install iOSmsg
 
 Since this is iOS app, you have to have OS X and Xcode to be able to run this app. You don't need to be a member of Apple Developer Program (paid $99 annually). To run it just run

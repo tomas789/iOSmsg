@@ -1,0 +1,6 @@
+framework module RMQClient {
+  umbrella header "RMQClient-umbrella.h"
+
+  export *
+  module * { export * }
+}

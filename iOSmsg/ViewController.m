@@ -34,6 +34,11 @@
     
     self.defaults = [NSUserDefaults standardUserDefaults];
     [self updateUiWithUserDefaults];
+    
+    NSString *broker = [self.brokerEdit text];
+    if (broker == nil || [broker length] == 0) {
+        [self.connectButton setEnabled:FALSE];
+    }
 }
 
 - (NSTimeInterval)computeImuTimeOffsetFromEpoch {

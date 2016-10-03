@@ -1,5 +1,7 @@
 # iOSmsg
 
+[![Build Status](https://travis-ci.org/tomas789/iOSmsg.svg?branch=master)](https://travis-ci.org/tomas789/iOSmsg)
+
 This allows you to publish data from iOSmsg app to ROS.
 
 ![iOSmsg app preview](https://tomas789.github.io/iOSmsg/images/app_preview_small.png)

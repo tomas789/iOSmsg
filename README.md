@@ -16,6 +16,9 @@ The iOS app publishes sensor data to RabbitMQ topic in JSON format. Then client 
 
 ## Request a feature
 
+Are you missing any feature in this app? Just go to [FeatHub](http://feathub.com/tomas789/iOSmsg) and vote for any feature or add your own. Help the app be better!
+
+#### List of feature requests
 [![Feature Requests](http://feathub.com/tomas789/iOSmsg?format=svg)](http://feathub.com/tomas789/iOSmsg)
 
 ## How to install iOSmsg

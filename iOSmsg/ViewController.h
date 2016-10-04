@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <RMQClient/RMQClient.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <RMQConnectionDelegate>
 
 @property (strong, nonatomic) NSOperationQueue *queue;
 @property (strong, nonatomic) CMMotionManager *motionManager;
@@ -29,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UISlider *rateSlider;
 @property (weak, nonatomic) IBOutlet UILabel *accelerometerSentLabel;
 @property (weak, nonatomic) IBOutlet UILabel *gyroscopeSentLabel;
+@property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 
 
 - (IBAction)updateDefaultsOnItemChanged:(UITextField *)sender;
@@ -39,9 +40,18 @@
 - (NSTimeInterval)computeImuTimeOffsetFromEpoch;
 - (void)startTimer;
 - (void)setUiStateEnabled: (BOOL)enabled;
+- (void)notifyUserWith: (NSString *)message withTitle:(NSString *)title;
 
 - (void)connectToBrokerWithUri: (NSString *)uri;
 - (RMQExchange *)getExchange: (NSString *)exchange;
+
+// RMQConnectionDelegate
+- (void)connection:(RMQConnection *)connection failedToConnectWithError:(NSError *)error;
+- (void)connection:(RMQConnection *)connection disconnectedWithError:(NSError *)error;
+- (void)willStartRecoveryWithConnection:(RMQConnection *)connection;
+- (void)startingRecoveryWithConnection:(RMQConnection *)connection;
+- (void)recoveredConnection:(RMQConnection *)connection;
+- (void)channel:(id<RMQChannel>)channel error:(NSError *)error;
 
 @end
 

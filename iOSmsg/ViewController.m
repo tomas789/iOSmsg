@@ -24,6 +24,9 @@
     [self startTimer];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+}
+
 - (void)initializeInternalState {
     self.accelerometerSent = 0;
     self.gyroscopeSent = 0;
@@ -149,6 +152,7 @@
         [self.motionManager stopGyroUpdates];
         
         [self setUiStateEnabled:TRUE];
+        [self.statusLabel setText:@"Disconnected."];
     }
 }
 
@@ -164,14 +168,86 @@
     }
 }
 
+- (void)notifyUserWith:(NSString *)message withTitle:(NSString *)title {
+    UIAlertController * alert=   [UIAlertController
+                                  alertControllerWithTitle:title
+                                  message:message
+                                  preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* ok = [UIAlertAction
+                         actionWithTitle:@"OK"
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             [alert dismissViewControllerAnimated:YES completion:nil];
+                             
+                         }];
+    
+    [alert addAction:ok];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:alert animated:YES completion:nil];
+
+    });
+}
+
 - (void)connectToBrokerWithUri:(NSString *)uri {
-    self.connection = [[RMQConnection alloc] initWithUri:uri delegate:[RMQConnectionDelegateLogger new]];
+    self.connection = [[RMQConnection alloc] initWithUri:uri delegate:self];
     [self.connection start];
     self.channel = [self.connection createChannel];
+    [self.statusLabel setText:@"Sending data ..."];
 }
 
 - (RMQExchange *)getExchange:(NSString *)exchange {
     return [self.channel fanout:exchange];
+}
+
+- (void)connection:(RMQConnection *)connection failedToConnectWithError:(NSError *)error {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *desc = [error localizedDescription];
+        [self.statusLabel setText:[NSString stringWithFormat:@"Not connected: %@", desc]];
+        [self.connection close];
+        self.connection = nil;
+        [self setUiStateEnabled:TRUE];
+        [self.motionManager stopAccelerometerUpdates];
+        [self.motionManager stopGyroUpdates];
+    });
+}
+
+- (void)connection:(RMQConnection *)connection disconnectedWithError:(NSError *)error {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *desc = [error localizedDescription];
+        [self.statusLabel setText:[NSString stringWithFormat:@"Not connected: %@", desc]];
+        [self.connection close];
+        self.connection = nil;
+        [self setUiStateEnabled:TRUE];
+        [self.motionManager stopAccelerometerUpdates];
+        [self.motionManager stopGyroUpdates];
+    });
+}
+
+- (void)willStartRecoveryWithConnection:(RMQConnection *)connection {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.statusLabel setText:@"Will start connection recovery ..."];
+    });
+}
+
+- (void)startingRecoveryWithConnection:(RMQConnection *)connection {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.statusLabel setText:@"Starting connection recovery ..."];
+    });
+}
+
+- (void)recoveredConnection:(RMQConnection *)connection {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.statusLabel setText:@"Connection recovered"];
+    });
+}
+
+- (void)channel:(id<RMQChannel>)channel error:(NSError *)error {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.statusLabel setText:[NSString stringWithFormat:@"Channel error: %@", [error localizedDescription]]];
+    });
 }
 
 @end

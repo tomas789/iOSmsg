@@ -8,7 +8,7 @@ This allows you to publish data from iOSmsg app to ROS.
 
 ## What is iOSmsg
 
-It is a toolkit for publishing sensor data from iOS into ROS topics. It is set of two apps - iOSmsg and iOSmsg_client (this app).
+It is a toolkit for publishing sensor data from iOS into ROS topics. It is set of two apps - iOSmsg (this app) and iOSmsg_client.
 
 ### ... and how it works
 
